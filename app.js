@@ -33,7 +33,6 @@ axios.interceptors.request.use(
 )
 
 app.use('/metadata', (request, response) => {
-  requestTest = request.headers
   axios({
     url: baseUrl + '/*******',
     method: 'get'
