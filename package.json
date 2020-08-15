@@ -1,0 +1,26 @@
+{
+  "name": "nodemiddle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "cross-env NODE_ENV=development node app",
+    "start:prod": "cross-env NODE_ENV=production node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huisunyang/nodemiddle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huisunyang/nodemiddle/issues"
+  },
+  "homepage": "https://github.com/huisunyang/nodemiddle#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cross-env": "^7.0.2",
+    "express": "^4.17.1"
+  }
+}
