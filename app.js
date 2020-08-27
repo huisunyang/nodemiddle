@@ -1,47 +1,44 @@
-var express = require('express')
-var app = express()
-var axios = require('axios')
-var { baseUrl } = require('./config')
-axios.defaults.headers.post['Content-Type'] = 'application/json'
-// // 跨域
-var id 
-var token
-app.all('*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "X-Requested-With,token,id")
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS")
-  res.header("X-Powered-By",' 3.2.1')
-  res.header("Content-Type", "application/json;charset=utf-8")
-  if (req.method !== 'OPTIONS') {
-    id = req.headers['id']
-    token = req.headers['token']
-    next()
-  } else {
-    res.send('')
-  }
-})
-// 请求拦截器
-axios.interceptors.request.use(
-  function (config) {
-    config.headers['token'] = token
-    config.headers['id'] = id
-    return config
-  },
-  function (error) {
-    return Promise.reject(error)
-  }
-)
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-app.use('/metadata', (request, response) => {
-  axios({
-    url: baseUrl + '/*******',
-    method: 'get'
-  }).then(res => {
-    response.send(res.data)
-  }).catch(error => {
-    console.log(error)
-  })
-})
-console.log(baseUrl)
-app.listen(8080)
-console.log('listening to port 8080')
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+
+var app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+var history = require('connect-history-api-fallback');
+app.use(express.static(path.join(__dirname, './hello-world/dist')));
+app.use(history());
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
