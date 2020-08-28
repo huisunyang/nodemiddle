@@ -7,7 +7,19 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var app = express();
+var app = express()
+// graphql 接口调用
+const { createApolloFetch } = require('apollo-fetch');
+
+const fetch = createApolloFetch({
+  uri: 'http://localhost:8080/graphql',
+});
+
+fetch({
+  query: '{ hello}',
+}).then(res => {
+  console.log(res)
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
