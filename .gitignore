@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 /dist
-/ssl
+./ssl
 
 
 # local env files
