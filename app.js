@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var https = require('https')
 var fs = require('fs')
+var axios = require('axios')
 
 var app = express()
 // 添加异常处理
@@ -26,17 +27,25 @@ Object.defineProperty(Layer.prototype, 'handle', {
     }
   },
 })
+app.get('/test', (request,response)=> {
+  axios.get('http://localhost:3000/test').then(res => {
+    response.send(res.data)
+  }).catch(error => {
+    response.status(error.response.status).send(error)
+  })
+})
 // graphql 接口调用
 const { createApolloFetch } = require('apollo-fetch');
-
-const fetch = createApolloFetch({
-  uri: 'http://localhost:8080/graphql',
-});
-
-fetch({
-  query: '{ hello}',
-}).then(res => {
-  console.log(res)
+app.get('/graphql',(request,response) => {
+  const fetch = createApolloFetch({
+    uri: 'http://localhost:8080/graphql',
+  });
+  
+  fetch({
+    query: '{ hello}',
+  }).then(res => {
+    console.log(res)
+  })
 })
 
 // view engine setup
